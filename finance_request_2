@@ -1,0 +1,18 @@
+DROP VIEW IF EXISTS `turnover_country`;
+
+CREATE VIEW `turnover_country` as(
+
+select SUM(quantityOrdered*priceEach) as turnover, c.country,
+year(orderDate) as orderYear,  month(orderDate) as orderMonth
+    from orders o
+    join orderdetails od
+    on od.orderNumber=o.orderNumber
+    join customers c
+    on o.customerNumber = c.customerNumber
+GROUP BY c.country,orderYear,orderMonth
+HAVING (orderYear = YEAR(curdate() - interval 1 MONTH) and orderMonth = MONTH(curdate() - interval 1 MONTH)) 
+        or (orderMonth = MONTH(curdate() - interval 2 MONTH) and orderYear = YEAR(curdate() - interval 2 MONTH)));
+        
+        
+        
+SELECT * FROM turnover_country;
