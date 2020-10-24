@@ -1,0 +1,15 @@
+DROP VIEW IF EXISTS unpaid ;
+
+CREATE VIEW unpaid as (
+select orders.customerNumber, payments.amount,payments.paymentDate
+from orders
+JOIN payments
+ON payments.customerNumber = orders.customerNumber
+JOIN orderdetails
+ON orderdetails.orderNumber = orders.orderNumber
+
+WHERE orderdetails.quantityOrdered * orderdetails.priceEach != payments.amount
+GROUP BY orders.customerNumber
+);
+
+SELECT * FROM unpaid;
