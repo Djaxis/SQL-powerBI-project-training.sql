@@ -1,0 +1,18 @@
+DROP VIEW IF EXISTS `CLASSIC_CARS`;
+
+CREATE VIEW `CLASSIC_CARS` as (SELECT 
+products.productLine as category, orderDate,
+DATE_FORMAT(orderDate, '%Y-%c') as month_year,
+SUM(orderdetails.quantityOrdered) as quantity_ordered
+
+FROM orderdetails
+	JOIN products
+    ON orderdetails.productCode = products.productCode
+    JOIN orders
+    ON orderdetails.orderNumber = orders.orderNumber
+    
+GROUP BY month_year, category
+HAVING category= 'Classic cars' and orderDate BETWEEN DATE '2018-01-01'and '2020-12-31'
+ORDER BY orderDate);
+
+SELECT * FROM `CLASSIC_CARS`;
