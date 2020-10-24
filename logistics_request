@@ -1,0 +1,12 @@
+DROP VIEW IF EXISTS logistic;
+
+CREATE VIEW  Logistic
+AS 
+(SELECT products.productCode, products.productName , products.quantityInStock, SUM(orderdetails.quantityOrdered) as quantity_ordered  , orders.orderDate
+FROM products, orderdetails, orders
+WHERE products.productCode=orderdetails.productCode AND orders.orderNumber=orderdetails.orderNumber
+group by orderdetails.productCode
+order by sum(quantityOrdered) desc
+Limit 5);
+
+SELECT * FROM logistic;
