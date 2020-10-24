@@ -1,0 +1,22 @@
+DROP VIEW IF EXISTS `turnover`;
+
+CREATE VIEW `turnover` as (
+select orderDate, SUM(quantityOrdered*priceEach) as turnover, salesRepEmployeeNumber, 
+lastName, firstName
+    from orders o
+    join orderdetails od
+    on od.orderNumber=o.orderNumber
+    join products p
+    on od.productCode=p.productCode
+    join customers c
+    on c.customerNumber=o.customerNumber
+    join employees e
+    on c.salesRepEmployeeNumber=e.employeeNumber
+GROUP BY orderDate
+ORDER BY orderDate, turnover DESC);
+
+#requete a faire sur Grafana
+SELECT turnover, year(orderDate) as orderYear, month(orderDate) as orderMonth, salesRepEmployeeNumber,lastName, firstName
+FROM `turnover`
+WHERE orderDate BETWEEN DATE '2018-09-01' and '2018-09-30'
+ORDER BY turnover DESC;
